@@ -79,7 +79,7 @@ func main() {
 	flag.BoolVar(&configuration.SingleRun, "singlerun", configuration.SingleRun, "Option to run the microservice only one time and then stop afterwards. Option timeinterval will be ignored!")
 	flag.BoolVar(&configuration.Logging.Debug, "debug", configuration.Logging.Debug, "Option to run the microservice in debugging mode")
 	flag.Parse()
-	// Check if debug log should be enabeled
+	// Check if debug log should be enabled
 	if configuration.Logging.Debug {
 		Log.EnableDebug(true)
 	}
@@ -105,7 +105,7 @@ func main() {
 		Log.Logger.Info().Msg("Starting refresh ... ")
 		a.Run()
 		Log.Logger.Info().Msg("Finshed refresh.")
-		// Wait the provided time to before running againg
+		// Wait the provided time to before running again
 		d := time.Second * time.Duration(configuration.TimeInterval)
 		Log.Logger.Info().Interface("duration", d).Msg("Waiting for the next refresh.")
 		time.Sleep(d)

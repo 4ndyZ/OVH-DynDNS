@@ -38,7 +38,7 @@ func IsDomain(domain string) bool {
 }
 
 /*
-GetZoneFromDomain exctracts the root domain zone as string from a domain string
+GetZoneFromDomain extracts the root domain zone as string from a domain string
 
 For example:
  - Parameter: "subdomain.example.com"
@@ -82,7 +82,7 @@ func NSLookup(domain string) ([]net.IP, error) {
 	return ips, nil
 }
 
-// IntToString converts a integer value to an string
+// IntToString converts an integer value to a string
 func IntToString(i int) string {
 	return strconv.Itoa(i)
 }

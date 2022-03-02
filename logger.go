@@ -51,5 +51,8 @@ func (l *Logger) EnableDebug(debug bool) {
 
 // Rotate log file
 func (l *Logger) Rotate() {
-	l.fileWriter.Rotate()
+	err := l.fileWriter.Rotate()
+	if err != nil {
+		Log.Logger.Warn().Str("error", err.Error()).Msg("Unable to rotate log file.")
+	}
 }

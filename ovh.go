@@ -50,7 +50,7 @@ func (o *OVH) Refresh(domain string) error {
 func (o *OVH) getRecordID(domain string, ip net.IP) (int, error) {
 	endpoint := strings.Join([]string{"/domain/zone/", GetZoneFromDomain(domain), "/record?fieldType=", GetIPType(ip).String(), "&subDomain=", GetSubDomainFromDomain(domain)}, "")
 	// TODO: DEBUG endpoint
-	domains := []int{}
+	var domains []int
 	err := o.client.Get(endpoint, &domains)
 	if err != nil {
 		return 0, err
@@ -65,7 +65,7 @@ func (o *OVH) getRecordID(domain string, ip net.IP) (int, error) {
 	return domains[0], nil
 }
 
-// createRecord create an new A or AAAA record for a definied domain using the OVH API
+// createRecord create a new A or AAAA record for a defined domain using the OVH API
 func (o *OVH) createRecord(domain string, ip net.IP) error {
 	endpoint := strings.Join([]string{"/domain/zone/", GetZoneFromDomain(domain), "/record"}, "")
 	params := createRecordParams{
@@ -78,7 +78,7 @@ func (o *OVH) createRecord(domain string, ip net.IP) error {
 	return o.client.Post(endpoint, &params, nil)
 }
 
-// createRecord update an new A or AAAA record for a definied domain using the OVH API
+// updateRecord update an A or AAAA record for a defined domain using the OVH API
 func (o *OVH) updateRecord(domain string, ip net.IP, recordID int) error {
 	endpoint := strings.Join([]string{"/domain/zone/", GetZoneFromDomain(domain), "/record/", IntToString(recordID)}, "")
 	params := updateRecordParams{
