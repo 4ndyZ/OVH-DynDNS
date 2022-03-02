@@ -1,0 +1,59 @@
+builds:
+  - env: [CGO_ENABLED=0]
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    binary: "{{ tolower .ProjectName }}"
+checksum:
+  name_template: "Checksums.txt"
+archives:
+  - name_template: "{{ tolower .ProjectName }}-{{ tolower .Tag }}.{{ .Os }}.{{ tolower .Arch }}"
+    replacements:
+      amd64: x86_64
+      darwin: macOS
+    files:
+      - config/config.conf
+    format_overrides:
+      - goos: windows
+        format: zip
+nfpms:
+  - maintainer: AndyZ <info@andycraftz.eu>
+    description: DynDNS Client for OVH
+    homepage: https://github.com/4ndyZ/OVH-DynDNS
+    file_name_template: "{{ tolower .ProjectName }}-{{ tolower .Tag }}.{{ .Os }}.{{ tolower .Arch }}"
+    license: GPL-3.0
+    # Build as deb for Debian based distors and rpm for RedHat based distros
+    formats:
+      - deb
+      - rpm
+    contents:
+      # Config file
+      - src: config/config.conf
+        dst: /etc/ovh-dyndns/config.conf
+        type: "config|noreplace"
+        file_info:
+          mode: 0640
+          owner: root
+          group: ovh-dyndns
+      # Systemd service file
+      - src: service/service.service
+        dst: /usr/lib/systemd/system/ovh-dyndns.service
+    # Install and remove scripts
+    scripts:
+      preinstall: "scripts/preinstall.sh"
+      postremove: "scripts/postremove.sh"
+    overrides:
+      rpm:
+        replacements:
+          amd64: x86_64
+          arm64: aarch64
+release:
+  # Set name of the release on GitHub
+  name_template: "Release v{{ .Version }}"
+  prerelease: auto
