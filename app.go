@@ -8,8 +8,9 @@ import (
 type App struct {
 	ovh    OVH
 	dynDNS struct {
-		domain  string
-		ipTypes []IPType
+		domain      string
+		ipTypes     []IPType
+		checkMethod CheckMethod
 	}
 }
 
@@ -17,7 +18,10 @@ type App struct {
 func (a *App) Initialize(configuration Configuration) {
 	// OVH API
 	a.ovh = OVH{}
-	a.ovh.Initialize(configuration)
+	err := a.ovh.Initialize(configuration)
+	if err != nil {
+		Log.Logger.Warn().Msg("Error while loading OVH module.")
+	}
 	// Other config
 	a.dynDNS.domain = configuration.DynDNS.Domain
 	switch strings.ToLower(configuration.DynDNS.Mode) {
@@ -27,7 +31,20 @@ func (a *App) Initialize(configuration Configuration) {
 		a.dynDNS.ipTypes = []IPType{IPv4}
 	case "v6":
 		a.dynDNS.ipTypes = []IPType{IPv6}
+	default:
+		Log.Logger.Warn().Str("mode", strings.ToLower(configuration.DynDNS.Mode)).Msg("Invalid DynDNS service mode. Defaulting to \"ipv4\".")
+		a.dynDNS.ipTypes = []IPType{IPv4}
 	}
+	Log.Logger.Debug().Str("mode", strings.ToLower(configuration.DynDNS.Mode)).Msg("Running mode.")
+	switch strings.ToLower(configuration.DynDNS.Check) {
+	case "dns":
+		a.dynDNS.checkMethod = DNS
+	case "api":
+		a.dynDNS.checkMethod = API
+	default:
+		Log.Logger.Warn().Str("check", strings.ToLower(configuration.DynDNS.Check)).Msg("Invalid DynDNS check method. Defaulting to \"DNS\".")
+	}
+	Log.Logger.Debug().Str("mode", strings.ToLower(configuration.DynDNS.Mode)).Msg("Checking mode.")
 }
 
 // Run app

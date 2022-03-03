@@ -75,6 +75,7 @@ func main() {
 	flag.StringVar(&configuration.OVH.ConsumerKey, "ovh-ck", configuration.OVH.ConsumerKey, "OVH API consumer key")
 	flag.StringVar(&configuration.DynDNS.Domain, "dyndns-domain", configuration.DynDNS.Domain, "Domain for the DynDNS Service")
 	flag.StringVar(&configuration.DynDNS.Mode, "dyndns-mode", configuration.DynDNS.Mode, "Mode of the DynDNS service [dual, v4, v6]")
+	flag.StringVar(&configuration.DynDNS.Check, "dyndns-check", configuration.DynDNS.Check, "Mode how to check if DynDNS need renewal [api, dns]")
 	flag.IntVar(&configuration.TimeInterval, "timeinterval", configuration.TimeInterval, "Time interval in seconds when the service should update the DynDNS records.)")
 	flag.BoolVar(&configuration.SingleRun, "singlerun", configuration.SingleRun, "Option to run the microservice only one time and then stop afterwards. Option timeinterval will be ignored!")
 	flag.BoolVar(&configuration.Logging.Debug, "debug", configuration.Logging.Debug, "Option to run the microservice in debugging mode")
@@ -97,7 +98,7 @@ func main() {
 		s := <-sigs
 		Log.Logger.Info().Str("reason", s.String()).Msg("Stopping the service.")
 		Log.Rotate()
-		os.Exit(1)
+		os.Exit(0)
 	}()
 	// Infinite loop
 	for {

@@ -13,6 +13,15 @@ func (ipType IPType) String() string {
 	return string(ipType)
 }
 
+// CheckMethod used as enum for IP refresh check
+type CheckMethod int
+
+// Check Method enum constants
+const (
+	API CheckMethod = iota + 1
+	DNS
+)
+
 // Configuration struct
 type Configuration struct {
 	OVH struct {
@@ -24,6 +33,7 @@ type Configuration struct {
 	DynDNS struct {
 		Domain string `yaml:"domain"`
 		Mode   string `yaml:"mode"`
+		Check  string `yaml:"check"`
 	} `yaml:"dyndns"`
 	TimeInterval int  `yaml:"timeinterval-to-pull"`
 	SingleRun    bool `yaml:"single-run"`

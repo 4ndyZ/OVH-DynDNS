@@ -3,34 +3,36 @@ package main
 import (
 	"encoding/csv"
 	"errors"
+	"io"
 	"net"
 	"net/http"
 	"strings"
 )
 
 func (a *App) needsRefresh() (bool, error) {
-	needsRefresh := false
-	// NS Lookup for domain
-	ips, err := NSLookup(a.dynDNS.domain)
-	if err != nil {
-		return needsRefresh, err
-	}
-	// Check for no DNS entries at all
-	if len(ips) == 0 {
+	// Always perform refresh when check methode is API
+	if a.dynDNS.checkMethod == API {
 		return true, nil
 	}
-	// Check if DNS entries still match
-	for _, ipDNS := range ips {
-		ipNow, err := a.getIP(GetIPType(ipDNS))
+	// Get set IPs
+	var ips []net.IP
+	if ips == nil || len(ips) == 0 {
+		return true, nil
+	}
+	//
+	needsRefresh := false
+	// Check if entries still match
+	for _, ipSet := range ips {
+		ipNow, err := a.getIP(GetIPType(ipSet))
 		if err != nil {
 			break
 		}
-		if !ipNow.Equal(ipDNS) {
+		if !ipNow.Equal(ipSet) {
 			needsRefresh = true
 			break
 		}
 	}
-	return needsRefresh, err
+	return needsRefresh, nil
 }
 
 func (a *App) refresh() error {
@@ -39,7 +41,7 @@ func (a *App) refresh() error {
 		if err != nil {
 			return err
 		}
-		return a.ovh.Update(a.dynDNS.domain, ip)
+		return a.ovh.Update(a.dynDNS.domain, ip, false)
 	}
 	return a.ovh.Refresh(a.dynDNS.domain)
 }
@@ -55,7 +57,12 @@ func (a *App) getIP(ipType IPType) (net.IP, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
+		if err != nil {
+			Log.Logger.Warn().Str("error", err.Error()).Msg("Error while closing HTTP call response body.")
+		}
+	}(resp.Body)
 	// Parse data
 	reader := csv.NewReader(resp.Body)
 	reader.Comma = ','
