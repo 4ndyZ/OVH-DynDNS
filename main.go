@@ -64,6 +64,7 @@ func main() {
 		configuration.OVH.ConsumerKey = ""
 		configuration.DynDNS.Domain = "subdomain.example.com"
 		configuration.DynDNS.Mode = "v4"
+		configuration.DynDNS.Check = "dns"
 		configuration.TimeInterval = 60
 		configuration.SingleRun = false
 		configuration.Logging.Debug = false
@@ -84,11 +85,14 @@ func main() {
 	if configuration.Logging.Debug {
 		Log.EnableDebug(true)
 	}
-
 	Log.Logger.Info().Msg("Starting ...")
 	// Create app worker
 	a := App{}
-	a.Initialize(configuration)
+	err = a.Initialize(configuration)
+	if err != nil {
+		Log.Logger.Error().Str("error", err.Error()).Msg("Unable to start the service.")
+		os.Exit(1)
+	}
 	// Setup signal catching
 	sigs := make(chan os.Signal, 1)
 	// Catch all signals since not explicitly listing
@@ -105,7 +109,7 @@ func main() {
 		// Run the microservice
 		Log.Logger.Info().Msg("Starting refresh ... ")
 		a.Run()
-		Log.Logger.Info().Msg("Finshed refresh.")
+		Log.Logger.Info().Msg("Finished refresh.")
 		// Wait the provided time to before running again
 		d := time.Second * time.Duration(configuration.TimeInterval)
 		Log.Logger.Info().Interface("duration", d).Msg("Waiting for the next refresh.")

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"strings"
 )
 
@@ -15,12 +16,12 @@ type App struct {
 }
 
 // Initialize app struct with configuration
-func (a *App) Initialize(configuration Configuration) {
+func (a *App) Initialize(configuration Configuration) error {
 	// OVH API
 	a.ovh = OVH{}
 	err := a.ovh.Initialize(configuration)
 	if err != nil {
-		Log.Logger.Warn().Msg("Error while loading OVH module.")
+		return errors.New("error while loading OVH configuration")
 	}
 	// Other config
 	a.dynDNS.domain = configuration.DynDNS.Domain
@@ -45,6 +46,7 @@ func (a *App) Initialize(configuration Configuration) {
 		Log.Logger.Warn().Str("check", strings.ToLower(configuration.DynDNS.Check)).Msg("Invalid DynDNS check method. Defaulting to \"DNS\".")
 	}
 	Log.Logger.Debug().Str("mode", strings.ToLower(configuration.DynDNS.Mode)).Msg("Checking mode.")
+	return nil
 }
 
 // Run app

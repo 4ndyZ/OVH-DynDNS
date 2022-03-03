@@ -15,7 +15,10 @@ func (a *App) needsRefresh() (bool, error) {
 		return true, nil
 	}
 	// Get set IPs
-	var ips []net.IP
+	ips, err := NSLookup(a.dynDNS.domain)
+	if err != nil {
+		return true, err
+	}
 	if ips == nil || len(ips) == 0 {
 		return true, nil
 	}
@@ -25,6 +28,7 @@ func (a *App) needsRefresh() (bool, error) {
 	for _, ipSet := range ips {
 		ipNow, err := a.getIP(GetIPType(ipSet))
 		if err != nil {
+			needsRefresh = true
 			break
 		}
 		if !ipNow.Equal(ipSet) {
@@ -41,7 +45,10 @@ func (a *App) refresh() error {
 		if err != nil {
 			return err
 		}
-		return a.ovh.Update(a.dynDNS.domain, ip, false)
+		err = a.ovh.Update(a.dynDNS.domain, ip, false)
+		if err != nil {
+			return err
+		}
 	}
 	return a.ovh.Refresh(a.dynDNS.domain)
 }
