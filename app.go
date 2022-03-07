@@ -28,9 +28,9 @@ func (a *App) Initialize(configuration Configuration) error {
 	switch strings.ToLower(configuration.DynDNS.Mode) {
 	case "dual":
 		a.dynDNS.ipTypes = []IPType{IPv4, IPv6}
-	case "v4":
+	case "ipv4":
 		a.dynDNS.ipTypes = []IPType{IPv4}
-	case "v6":
+	case "ipv6":
 		a.dynDNS.ipTypes = []IPType{IPv6}
 	default:
 		Log.Logger.Warn().Str("mode", strings.ToLower(configuration.DynDNS.Mode)).Msg("Invalid DynDNS service mode. Defaulting to \"ipv4\".")
