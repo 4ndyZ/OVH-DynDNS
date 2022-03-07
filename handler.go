@@ -23,20 +23,23 @@ func (a *App) needsRefresh() (bool, error) {
 		return true, nil
 	}
 	//
-	needsRefresh := false
+	matches := 0
 	// Check if entries still match
 	for _, ipSet := range ips {
-		ipNow, err := a.getIP(GetIPType(ipSet))
+		ipType := GetIPType(ipSet)
+		ipNow, err := a.getIP(ipType)
 		if err != nil {
-			needsRefresh = true
-			break
+			return true, nil
 		}
-		if !ipNow.Equal(ipSet) {
-			needsRefresh = true
-			break
+		if ipNow.Equal(ipSet) {
+			matches++
 		}
 	}
-	return needsRefresh, nil
+	// Check if matches length is length of IP types
+	if matches != len(a.dynDNS.ipTypes) {
+		return true, nil
+	}
+	return false, nil
 }
 
 func (a *App) refresh() error {
