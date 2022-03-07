@@ -51,13 +51,6 @@ func (o *OVH) Update(domain string, ip net.IP, force bool) error {
 	return o.updateRecord(domain, ip, recordID)
 }
 
-// Refresh saves the changed DNS zone
-func (o *OVH) Refresh(domain string) error {
-	endpoint := strings.Join([]string{"/domain/zone/", GetZoneFromDomain(domain), "/refresh/"}, "")
-	Log.Logger.Debug().Str("method", "POST").Str("endpoint", endpoint).Msg("Update DNS Zone.")
-	return o.client.Post(endpoint, nil, nil)
-}
-
 // getRecordID get the A or AAAA record id of a domain from the OVH API
 func (o *OVH) getRecordID(domain string, ip net.IP) (int, error) {
 	endpoint := strings.Join([]string{"/domain/zone/", GetZoneFromDomain(domain), "/record?fieldType=", GetIPType(ip).String(), "&subDomain=", GetSubDomainFromDomain(domain)}, "")
@@ -97,7 +90,11 @@ func (o *OVH) createRecord(domain string, ip net.IP) error {
 		TTL:       60,
 	}
 	Log.Logger.Debug().Str("method", "POST").Str("endpoint", endpoint).Str("subdomain", GetSubDomainFromDomain(domain)).Str("target", ip.String()).Str("record-type", GetIPType(ip).String()).Msg("Create DNS record.")
-	return o.client.Post(endpoint, &record, nil)
+	err := o.client.Post(endpoint, &record, nil)
+	if err != nil {
+		return err
+	}
+	return o.refresh(domain)
 }
 
 // updateRecord update an A or AAAA record for a defined domain using the OVH API
@@ -109,7 +106,18 @@ func (o *OVH) updateRecord(domain string, ip net.IP, recordID int) error {
 		TTL:       60,
 	}
 	Log.Logger.Debug().Str("method", "PUT").Str("endpoint", endpoint).Str("subdomain", GetSubDomainFromDomain(domain)).Str("target", ip.String()).Str("record-type", GetIPType(ip).String()).Msg("Update DNS record.")
-	return o.client.Put(endpoint, &record, nil)
+	err := o.client.Put(endpoint, &record, nil)
+	if err != nil {
+		return err
+	}
+	return o.refresh(domain)
+}
+
+// refresh saves the changed DNS zone
+func (o *OVH) refresh(domain string) error {
+	endpoint := strings.Join([]string{"/domain/zone/", GetZoneFromDomain(domain), "/refresh/"}, "")
+	Log.Logger.Debug().Str("method", "POST").Str("endpoint", endpoint).Msg("Update DNS Zone.")
+	return o.client.Post(endpoint, nil, nil)
 }
 
 // getRecord for holding refs for OVH DNS record

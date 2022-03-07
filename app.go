@@ -45,7 +45,7 @@ func (a *App) Initialize(configuration Configuration) error {
 	default:
 		Log.Logger.Warn().Str("check", strings.ToLower(configuration.DynDNS.Check)).Msg("Invalid DynDNS check method. Defaulting to \"DNS\".")
 	}
-	Log.Logger.Debug().Str("mode", strings.ToLower(configuration.DynDNS.Mode)).Msg("Checking mode.")
+	Log.Logger.Debug().Str("check", strings.ToLower(configuration.DynDNS.Check)).Msg("Checking mode.")
 	return nil
 }
 

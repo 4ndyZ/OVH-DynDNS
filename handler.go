@@ -50,7 +50,7 @@ func (a *App) refresh() error {
 			return err
 		}
 	}
-	return a.ovh.Refresh(a.dynDNS.domain)
+	return nil
 }
 
 func (a *App) getIP(ipType IPType) (net.IP, error) {
