@@ -23,23 +23,25 @@ func (a *App) needsRefresh() (bool, error) {
 		return true, nil
 	}
 	//
-	matches := 0
+	needsRefresh := false
 	// Check if entries still match
 	for _, ipSet := range ips {
 		ipType := GetIPType(ipSet)
+		if !a.legitIPType(a.dynDNS.ipTypes, ipType) {
+			needsRefresh = true
+			break
+		}
 		ipNow, err := a.getIP(ipType)
 		if err != nil {
-			return true, nil
+			needsRefresh = true
+			break
 		}
-		if ipNow.Equal(ipSet) {
-			matches++
+		if !ipNow.Equal(ipSet) {
+			needsRefresh = true
+			break
 		}
 	}
-	// Check if matches length is length of IP types
-	if matches != len(a.dynDNS.ipTypes) {
-		return true, nil
-	}
-	return false, nil
+	return needsRefresh, nil
 }
 
 func (a *App) refresh() error {
@@ -86,4 +88,13 @@ func (a *App) getIP(ipType IPType) (net.IP, error) {
 		return nil, errors.New(strings.Join([]string{ipString, " is not a valid IP address."}, ""))
 	}
 	return ip, nil
+}
+
+func (a *App) legitIPType(ipTypes []IPType, ipType IPType) bool {
+	for _, ipTypeOfSlice := range ipTypes {
+		if ipType == ipTypeOfSlice {
+			return true
+		}
+	}
+	return false
 }
