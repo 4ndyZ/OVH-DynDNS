@@ -110,6 +110,12 @@ func main() {
 		Log.Logger.Info().Msg("Starting refresh ... ")
 		a.Run()
 		Log.Logger.Info().Msg("Finished refresh.")
+		// Check if single run
+		if configuration.SingleRun {
+			Log.Logger.Info().Msg("Stopping.")
+			Log.Rotate()
+			os.Exit(0)
+		}
 		// Wait the provided time to before running again
 		d := time.Second * time.Duration(configuration.TimeInterval)
 		Log.Logger.Info().Interface("duration", d).Msg("Waiting for the next refresh.")
