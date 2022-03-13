@@ -63,9 +63,9 @@ func main() {
 		configuration.OVH.ApplicationSecretKey = ""
 		configuration.OVH.ConsumerKey = ""
 		configuration.DynDNS.Domain = "subdomain.example.com"
-		configuration.DynDNS.Mode = "v4"
-		configuration.DynDNS.Check = "dns"
-		configuration.TimeInterval = 60
+		configuration.DynDNS.Mode = "ipv4"
+		configuration.DynDNS.Check = "api"
+		configuration.TimeInterval = 120
 		configuration.SingleRun = false
 		configuration.Logging.Debug = false
 	}
@@ -75,7 +75,7 @@ func main() {
 	flag.StringVar(&configuration.OVH.ApplicationSecretKey, "ovh-ask", configuration.OVH.ApplicationSecretKey, "OVH API application secret key")
 	flag.StringVar(&configuration.OVH.ConsumerKey, "ovh-ck", configuration.OVH.ConsumerKey, "OVH API consumer key")
 	flag.StringVar(&configuration.DynDNS.Domain, "dyndns-domain", configuration.DynDNS.Domain, "Domain for the DynDNS Service")
-	flag.StringVar(&configuration.DynDNS.Mode, "dyndns-mode", configuration.DynDNS.Mode, "Mode of the DynDNS service [dual, v4, v6]")
+	flag.StringVar(&configuration.DynDNS.Mode, "dyndns-mode", configuration.DynDNS.Mode, "Mode of the DynDNS service [dual, ipv4, ipv6]")
 	flag.StringVar(&configuration.DynDNS.Check, "dyndns-check", configuration.DynDNS.Check, "Mode how to check if DynDNS need renewal [api, dns]")
 	flag.IntVar(&configuration.TimeInterval, "timeinterval", configuration.TimeInterval, "Time interval in seconds when the service should update the DynDNS records.)")
 	flag.BoolVar(&configuration.SingleRun, "singlerun", configuration.SingleRun, "Option to run the microservice only one time and then stop afterwards. Option timeinterval will be ignored!")

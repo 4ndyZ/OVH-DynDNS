@@ -1,5 +1,5 @@
 # DynDNS Client for OVH
-This microservice uses the offical [OVH API](https://api.ovh.com/) and [their Go module](https://github.com/ovh/go-ovh/) to update a DynDNS Record.
+This microservice uses the official [OVH API](https://api.ovh.com/) and [their Go module](https://github.com/ovh/go-ovh/) to update a DynDNS Record.
 
 ## Function
 The microservice supports IPv4 (A record) and IPv6 (AAAA record). The microservice obtains you public IPv4 and IPv6 request by connection to a webserver and then creates or updates the DNS Zone via the OVH API.
@@ -8,7 +8,7 @@ The microservice supports IPv4 (A record) and IPv6 (AAAA record). The microservi
 This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with OVH SAS, or any of its subsidiaries or its affiliates.
 
 ## Prerequisites
-It is recommend to have a server where you can deploy the microservice, but it is also possible to start the microservice manually on a local machine.
+It is recommended to have a server where you can deploy the microservice, but it is also possible to start the microservice manually on a local machine.
 
 ## Installation and configuration
 Download the prebuilt binary packages from the [release page](https://github.com/4ndyZ/OVH-DynDNS/releases) and install them on your server.
@@ -37,24 +37,40 @@ Now you are able to install the package.
 
 After installing the package configure the microservice. The configuration file is located under `/etc/ovh-dyndns/config.yml`.
 
-No you you are able to enable the Systemd service using `systemctl`.
+Now you are able to enable the Systemd service using `systemctl`.
 `sudo systemctl enable ovh-dyndnss`
 
 And start the service also using `systemctl`.
 `sudo systemctl start ovh-dyndns`
 
 #### Windows/Other
-If you plan to run the microservice on Windows or another OS the whole process is a bit more complicated because there is no installation package avaible only prebuilt binaries.
+If you plan to run the microservice on Windows or another OS the whole process is a bit more complicated because there is no installation package available only prebuilt binaries.
 
 Download the prebuilt binary for your operating system.
 
-Exctract the prebuilt binary and change the configuration file located under `config/config.conf`.
+Extract the prebuilt binary and change the configuration file located under `config/config.conf`.
 
 After successful changing the configuration file you are able to run the prebuilt binary.
 
 ### Configuration
 The microservice tries to access the configuration file located under `/etc/ovh-dyndns/config.conf`. It the configuration file is not accessable or found the service will fallback to the local file located unter `config/config.conf`.
 To get the required application key, application secret key and consumer key visit the [OVH API documentation](https://docs.ovh.com/gb/en/api/first-steps-with-ovh-api/#create-your-app-keys).
+
+When creating the API key you need the following permission:
+
+```
+GET: /domain/zone/*
+PUT: /domain/zone/*
+POST: /domain/zone/*
+```
+
+Or if you want to restrict access to one domain zone:
+
+```
+GET: /domain/zone/{domain-zone}/*
+PUT: /domain/zone/{domain-zone}/*
+POST: /domain/zone/{domain-zone}/*
+```
 
 ### Logging
 The microservice while try to put the log file in the `/var/log/ovh-dyndns` folder. If the service is not able to access or find that folder, the logging file gets created in the local folder `logs`.
@@ -65,23 +81,25 @@ If you want to enable debug messages please change the configuration file  or ru
 ```
 Usage:
   -debug
-    	Option to run the microservice in debugging mode
+        Option to run the microservice in debugging mode
+  -dyndns-check string
+        Mode how to check if DynDNS need renewal [api, dns] (default "api")
   -dyndns-domain string
-    	Domain for the DynDNS Service (default "subdomain.example.com")
+        Domain for the DynDNS Service (default "subdomain.example.com")
   -dyndns-mode string
-    	Mode of the DynDNS service [dual, v4, v6] (default "v4")
+        Mode of the DynDNS service [dual, ipv4, ipv6] (default "ipv4")
   -ovh-ak string
-    	OVH API application key
+        OVH API application key
   -ovh-ask string
-    	OVH API application secret key
+        OVH API application secret key
   -ovh-ck string
-    	OVH API consumer key
+        OVH API consumer key
   -ovh-region string
-    	OVH API region [ovh-eu, ovh-us, ovh-ca] (default "ovh-eu")
+        OVH API region [ovh-eu, ovh-us, ovh-ca] (default "ovh-eu")
   -singlerun
-    	Option to run the microservice only one time and then stop afterwards. Option timeinterval will be ignored!
+        Option to run the microservice only one time and then stop afterwards. Option timeinterval will be ignored!
   -timeinterval int
-    	Time interval in seconds when the service should update the DynDNS records.) (default 60)
+        Time interval in seconds when the service should update the DynDNS records.) (default 120)
 ```
 
 ## Contributing
