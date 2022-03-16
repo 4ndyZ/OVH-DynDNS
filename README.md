@@ -53,7 +53,7 @@ Extract the prebuilt binary and change the configuration file located under `con
 After successful changing the configuration file you are able to run the prebuilt binary.
 
 ### Configuration
-The microservice tries to access the configuration file located under `/etc/ovh-dyndns/config.conf`. It the configuration file is not accessable or found the service will fallback to the local file located unter `config/config.conf`.
+The microservice tries to access the configuration file located under `/etc/ovh-dyndns/config.conf`. If the configuration file is not accessible or found the service will fall back to the local file located under `config/config.conf`.
 To get the required application key, application secret key and consumer key visit the [OVH API documentation](https://docs.ovh.com/gb/en/api/first-steps-with-ovh-api/#create-your-app-keys).
 
 When creating the API key you need the following permission:
