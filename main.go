@@ -101,7 +101,6 @@ func main() {
 	go func() {
 		s := <-sigs
 		Log.Logger.Info().Str("reason", s.String()).Msg("Stopping the service.")
-		Log.Rotate()
 		os.Exit(0)
 	}()
 	// Infinite loop
@@ -113,7 +112,6 @@ func main() {
 		// Check if single run
 		if configuration.SingleRun {
 			Log.Logger.Info().Msg("Stopping.")
-			Log.Rotate()
 			os.Exit(0)
 		}
 		// Wait the provided time to before running again
