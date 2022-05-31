@@ -2,6 +2,7 @@
 Description=OVH-DynDNS Service
 ConditionPathExists=/usr/local/bin/ovh-dyndns
 After=network.target
+StartLimitIntervalSec=60
 
 [Service]
 Type=simple
@@ -10,15 +11,13 @@ Group=ovh-dyndns
 
 Restart=on-failure
 RestartSec=10
-startLimitIntervalSec=60
 
 ExecStart=/usr/local/bin/ovh-dyndns
 
 # Make sure log directory exists
-PermissionsStartOnly=true
-ExecStartPre=/bin/mkdir -p /var/log/ovh-dyndns
-ExecStartPre=/bin/chown ovh-dyndns:ovh-dyndns /var/log/ovh-dyndns
-ExecStartPre=/bin/chmod 0744 /var/log/ovh-dyndns
+ExecStartPre=+/bin/mkdir -p /var/log/ovh-dyndns
+ExecStartPre=+/bin/chown ovh-dyndns:ovh-dyndns /var/log/ovh-dyndns
+ExecStartPre=+/bin/chmod 0744 /var/log/ovh-dyndns
 
 [Install]
 WantedBy=multi-user.target

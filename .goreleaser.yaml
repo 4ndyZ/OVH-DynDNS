@@ -28,7 +28,7 @@ nfpms:
     homepage: https://github.com/4ndyZ/OVH-DynDNS
     file_name_template: "{{ tolower .ProjectName }}-{{ tolower .Tag }}.{{ .Os }}.{{ tolower .Arch }}"
     license: GPL-3.0
-    # Build as deb for Debian based distros and rpm for RedHat based distros
+    # Build as deb for Debian based distributions and rpm for RedHat based distributions
     formats:
       - deb
       - rpm
@@ -42,8 +42,12 @@ nfpms:
           owner: root
           group: ovh-dyndns
       # Systemd service file
-      - src: service/service.service
+      - src: service/service_deb.service
         dst: /usr/lib/systemd/system/ovh-dyndns.service
+        packager: deb
+      - src: service/service_rpm.service
+        dst: /usr/lib/systemd/system/ovh-dyndns.service
+        packager: rpm
     # Install and remove scripts
     scripts:
       preinstall: "scripts/preinstall.sh"
