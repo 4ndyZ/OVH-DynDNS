@@ -3,7 +3,7 @@ module github.com/4ndyZ/OVH-DynDNS/m/v2
 go 1.18
 
 require (
-	github.com/ovh/go-ovh v1.1.0
+	github.com/ovh/go-ovh v1.2.0
 	github.com/rs/zerolog v1.27.0
 	golang.org/x/net v0.0.0-20220607020251-c690dde0001d
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
