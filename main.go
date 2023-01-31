@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
 	"os"
 	"os/signal"
 	"strings"
@@ -48,7 +47,7 @@ func main() {
 	}
 	// Try to parse the configuration file if exists
 	if config != "" {
-		body, err := ioutil.ReadFile(config)
+		body, err := os.ReadFile(config)
 		if err != nil {
 			Log.Logger.Warn().Str("error", err.Error()).Msg("Error while reading the configuration file.")
 		}
@@ -67,6 +66,7 @@ func main() {
 		configuration.DynDNS.Check = "api"
 		configuration.TimeInterval = 120
 		configuration.SingleRun = false
+		configuration.NetworkInterface = ""
 		configuration.Logging.Debug = false
 	}
 	// Commandline flags
@@ -79,6 +79,7 @@ func main() {
 	flag.StringVar(&configuration.DynDNS.Check, "dyndns-check", configuration.DynDNS.Check, "Mode how to check if DynDNS need renewal [api, dns]")
 	flag.IntVar(&configuration.TimeInterval, "timeinterval", configuration.TimeInterval, "Time interval in seconds when the service should update the DynDNS records.)")
 	flag.BoolVar(&configuration.SingleRun, "singlerun", configuration.SingleRun, "Option to run the microservice only one time and then stop afterwards. Option timeinterval will be ignored!")
+	flag.StringVar(&configuration.NetworkInterface, "network-interface", configuration.NetworkInterface, "Network interface to use for the DynDNS service. If empty the auto selected network interface will be used.")
 	flag.BoolVar(&configuration.Logging.Debug, "debug", configuration.Logging.Debug, "Option to run the microservice in debugging mode")
 	flag.Parse()
 	// Check if debug log should be enabled

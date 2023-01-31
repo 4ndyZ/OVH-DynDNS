@@ -88,6 +88,8 @@ Usage:
         Domain for the DynDNS Service (default "subdomain.example.com")
   -dyndns-mode string
         Mode of the DynDNS service [dual, ipv4, ipv6] (default "ipv4")
+  -network-interface string
+        Network interface to use for the DynDNS service. If empty the auto selected network interface will be used.
   -ovh-ak string
         OVH API application key
   -ovh-ask string
@@ -106,4 +108,4 @@ Usage:
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
-[GPL-3.0](https://github.com/4ndyZ/OVH-DynDNS/blob/master/LICENSE)
+[GPL-3.0](https://github.com/4ndyZ/OVH-DynDNS/blob/main/COPYING)
