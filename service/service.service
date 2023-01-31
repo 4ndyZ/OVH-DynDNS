@@ -1,7 +1,8 @@
 [Unit]
 Description=OVH-DynDNS Service
-ConditionPathExists=/usr/local/bin/ovh-dyndns
-After=network.target
+ConditionPathExists=/usr/bin/ovh-dyndns
+After=network-online.target
+Wants=network-online.target
 StartLimitIntervalSec=60
 
 [Service]
@@ -10,10 +11,13 @@ User=ovh-dyndns
 Group=ovh-dyndns
 
 Restart=on-failure
-RestartSec=10
+RestartSec=15
 
-ExecStart=/usr/local/bin/ovh-dyndns
+ExecStart=/usr/bin/ovh-dyndns
 
+# Make sure config file exists
+ExecStartPre=+/bin/mkdir -p /etc/ovh-dyndns
+ExecStartPre=+/bin/chown root:mac-api /etc/ovh-dyndns
 # Make sure log directory exists
 ExecStartPre=+/bin/mkdir -p /var/log/ovh-dyndns
 ExecStartPre=+/bin/chown ovh-dyndns:ovh-dyndns /var/log/ovh-dyndns

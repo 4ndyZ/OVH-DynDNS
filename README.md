@@ -106,4 +106,4 @@ Usage:
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
-[GPL-3.0](https://github.com/4ndyZ/OVH-DynDNS/blob/master/LICENSE)
+[GPL-3.0](https://github.com/4ndyZ/OVH-DynDNS/blob/main/COPYING)
