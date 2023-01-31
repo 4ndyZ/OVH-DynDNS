@@ -35,9 +35,10 @@ type Configuration struct {
 		Mode   string `yaml:"mode"`
 		Check  string `yaml:"check"`
 	} `yaml:"dyndns"`
-	TimeInterval int  `yaml:"timeinterval-to-pull"`
-	SingleRun    bool `yaml:"single-run"`
-	Logging      struct {
+	TimeInterval     int    `yaml:"timeinterval-to-pull"`
+	SingleRun        bool   `yaml:"single-run"`
+	NetworkInterface string `yaml:"network-interface"`
+	Logging          struct {
 		Debug bool `yaml:"debug"`
 	} `yaml:"logging"`
 }

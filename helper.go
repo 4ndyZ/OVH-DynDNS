@@ -37,12 +37,30 @@ func IsDomain(domain string) bool {
 	return regex.MatchString(domain)
 }
 
+// GetInterfaceFromName returns a net.Interface from an interface name string
+func GetInterfaceFromName(name string) (net.Interface, error) {
+	iface, err := net.InterfaceByName(name)
+	if err != nil {
+		return net.Interface{}, err
+	}
+	return *iface, err
+}
+
+// GetIPsFromInterface returns all IPs from a net.Interface object as an array
+func GetIPsFromInterface(iface net.Interface) ([]net.Addr, error) {
+	ips, err := iface.Addrs()
+	if err != nil {
+		return []net.Addr{}, err
+	}
+	return ips, nil
+}
+
 /*
 GetZoneFromDomain extracts the root domain zone as string from a domain string
 
 For example:
- - Parameter: "subdomain.example.com"
- - Return: "example.com"
+  - Parameter: "subdomain.example.com"
+  - Return: "example.com"
 */
 func GetZoneFromDomain(domain string) string {
 	zone, err := publicsuffix.EffectiveTLDPlusOne(domain)
@@ -56,8 +74,8 @@ func GetZoneFromDomain(domain string) string {
 GetSubDomainFromDomain extracts the subdomain as string from a domain string
 
 For example:
- - Parameter: "subdomain.example.com"
- - Return: "subdomain"
+  - Parameter: "subdomain.example.com"
+  - Return: "subdomain"
 */
 func GetSubDomainFromDomain(domain string) string {
 	zone := GetZoneFromDomain(domain)
