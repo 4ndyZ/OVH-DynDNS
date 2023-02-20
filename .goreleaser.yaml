@@ -29,8 +29,8 @@ archives:
         format: zip
 nfpms:
   - maintainer: AndyZ <info@andycraftz.eu>
-    description: MAC Address API
-    homepage: https://github.com/4ndyZ/MAC-API
+    description: DynDNS Client for OVH
+    homepage: https://github.com/4ndyZ/OVH-DynDNS
     file_name_template: >-
       {{ tolower .ProjectName }}_{{ tolower .Version }}+{{ .Os }}_{{ tolower .Arch }}
     license: GPL-3.0
@@ -43,15 +43,15 @@ nfpms:
     contents:
       # Config file
       - src: config/config.conf
-        dst: /etc/mac-api/config.conf
+        dst: /etc/ovh-dyndns/config.conf
         type: "config|noreplace"
         file_info:
           mode: 0640
           owner: root
-          group: mac-api
+          group: ovh-dyndns
       # Systemd service file
       - src: service/service.service
-        dst: /usr/lib/systemd/system/mac-api.service
+        dst: /usr/lib/systemd/system/ovh-dyndns.service
     # Install and remove scripts
     scripts:
       preinstall: "scripts/preinstall.sh"
