@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/ovh/go-ovh v1.3.0
-	github.com/rs/zerolog v1.29.0
+	github.com/rs/zerolog v1.29.1
 	golang.org/x/net v0.7.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
