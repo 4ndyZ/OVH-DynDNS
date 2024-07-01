@@ -1,3 +1,5 @@
+---
+version: 2
 project_name: ovh-dyndns
 builds:
   - env: [CGO_ENABLED=0]
