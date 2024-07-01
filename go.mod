@@ -1,6 +1,6 @@
 module github.com/4ndyZ/OVH-DynDNS/m/v2
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/ovh/go-ovh v1.6.0
